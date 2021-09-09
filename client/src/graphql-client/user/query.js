@@ -1,5 +1,38 @@
-import {gql} from "@apollo/client"
-const checkAuth=gql`
+import { gql } from "@apollo/client"
+const getUser = gql`
+    query getUser($userID:ID)
+    {
+        getUser(userID:$userID)
+        {
+            username
+            posts {
+                id
+                body
+                likes{
+                    id
+                    username
+                }
+                comments{
+                    content
+                    user{
+                    id
+                    username
+                    }
+                }
+                user{
+                    id
+                    username
+                }
+            }
+            friends{
+                id
+                username
+            }
+
+        }
+    }
+`
+const checkAuth = gql`
     query checkAuth
     {
         checkAuth
@@ -11,4 +44,4 @@ const checkAuth=gql`
         }
     }
 `
-export {checkAuth}
+export { checkAuth, getUser }

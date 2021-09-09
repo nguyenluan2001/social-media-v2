@@ -4,10 +4,22 @@ const getPosts = gql`
     {
         getPosts
         {
+            id
             body
             user{
                 id
                 username
+            }
+            likes{
+                id
+                username
+            }
+            comments{
+                user{
+                    id
+                    username
+                }
+                content
             }
             createdAt
         }

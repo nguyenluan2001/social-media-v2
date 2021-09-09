@@ -20,7 +20,7 @@ function Header() {
     }
     return (
         <Container>
-            <Logo>MySocial</Logo>
+            <Logo to="/">MySocial</Logo>
             <Search>
                 <input type="text" />
                 <div className="icon">

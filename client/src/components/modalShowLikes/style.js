@@ -1,0 +1,73 @@
+import styled from "styled-components";
+export const Container=styled.div`
+width:100vw;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+position:fixed;
+top:0;
+left:0;
+right:0;
+background:rgba(243,243,244,0.6);
+z-index:5;
+`
+export const Content=styled.div`
+width:50%;
+height:70%;
+overflow-y:scroll;
+background:white;
+padding:3%;
+box-sizing:border-box;
+position:relative;
+border-radius:10px;
+.close{
+    position:absolute;
+    top:2%;
+    right:2%;
+    z-index:5;
+    font-size:2rem;
+    cursor:pointer;
+}
+`
+export const ListUser=styled.ul`
+list-style-type:none;
+padding:0;
+li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    .userInfo
+    {
+        display:flex;
+        align-items:center;
+        .avatar{
+            margin-right:3%;
+            img{
+                width:50px;
+                height:50px;
+                border-radius:50%;
+            }
+        }
+        .username{
+            font-weight:bold;
+            text-decoration:none;
+            color:black;
+            &:hover{
+                text-decoration:underline;
+            }
+        }
+    }
+    .action{
+        background:rgb(228,230,235);
+        padding:0.5rem;
+        border-radius:5px;
+        font-weight:bold;
+        cursor:pointer;
+        &:hover{
+            background:rgb(191,195,206);
+        }
+
+    }
+}
+`

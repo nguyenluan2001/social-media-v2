@@ -61,4 +61,38 @@ const checkAuth=async (req)=>{
 const getUser=async (userID)=>{
     return await User.findOne({_id:userID})
 }
-module.exports = { register,login,checkAuth,getUser }
+const getListUsers=async (listUsers)=>{
+    console.log(listUsers)
+    return await User.find({_id:{$in:listUsers}})
+}
+const addFriend=async (userID,req)=>{
+    let user=await checkAuthHelper(req)
+    let makeFriendUser=await User.findOne({_id:userID})// user that auth user want to make friend
+    console.log(user)
+    if(user)
+    {
+
+       let friendsOfAuthUser=user.friends?user.friends:[]
+       let friendsOfMakeFriendUser=makeFriendUser.friends?makeFriendUser.friends:[]
+       if(friendsOfAuthUser.findIndex(item=>item==userID)!=-1)
+       {
+           let index1=friendsOfAuthUser.findIndex(item=>item==userID)
+           friendsOfAuthUser.splice(index1,1)
+            let index2=friendsOfMakeFriendUser.findIndex(item=>item==user._id)
+            friendsOfMakeFriendUser.splice(index2,1)
+       }
+       else
+       {
+           friendsOfAuthUser.push(userID)
+           friendsOfMakeFriendUser.push(user._id)
+       }
+       await User.updateOne({_id:user._id},{friends:friendsOfAuthUser})
+       await User.updateOne({_id:userID},{friends:friendsOfMakeFriendUser})
+       return true
+    }
+    else
+    {
+        throw new Error("Authenticated fail")
+    }
+}
+module.exports = { register,login,checkAuth,getUser,getListUsers,addFriend }

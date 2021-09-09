@@ -3,6 +3,7 @@ import { Container, TopSection, FootSection, ListItem } from "./style"
 import { FaPhotoVideo, FaTag, FaMapMarkerAlt, FaRegLaughSquint } from "react-icons/fa"
 import {createPost} from '../../graphql-client/post/mutation'
 import {getPosts} from "../../graphql-client/post/query"
+import {getUser} from "../../graphql-client/user/query"
 import {useMutation} from "@apollo/client"
 function CreatePost() {
     const [createPostMutation,dataMutation]=useMutation(createPost)

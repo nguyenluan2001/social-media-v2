@@ -1,6 +1,6 @@
 import styled from "styled-components";
 export const Container=styled.div`
-background:rgb(240,242,245);
+// background:rgb(240,242,245);
 display:flex;
 flex-direction: column;
 `

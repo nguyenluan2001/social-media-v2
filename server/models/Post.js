@@ -5,5 +5,7 @@ const schemaOptions = {
 const postSchema=mongoose.Schema({
     body:String,
     userID:String,
+    likes:Array,
+    comments:Array
 },schemaOptions)
 module.exports=mongoose.model("Post",postSchema)

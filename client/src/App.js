@@ -1,6 +1,6 @@
 import "./App.css"
 import MainContent from "./layouts/mainContent/MainContent";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route} from "react-router-dom"
 import MainSign from "./layouts/sign/mainSign/MainSign";
 import { ApolloClient, ApolloProvider, InMemoryCache,createHttpLink } from "@apollo/client"
 import { setContext } from '@apollo/client/link/context';
@@ -34,10 +34,10 @@ function App() {
           <Router>
             {/* <Header></Header> */}
             <Switch>
-              <PrivateRoute path="/" exact component={MainContent}></PrivateRoute>
-              <Route path="/" exact component={MainContent}></Route>
+              {/* <Route path="/" exact component={MainContent}></Route> */}
               <Route path="/login" component={MainSign}></Route>
               <Route path="/register" component={MainSign}></Route>
+              <PrivateRoute path="/" component={MainContent}></PrivateRoute>
             </Switch>
           </Router>
         </div>

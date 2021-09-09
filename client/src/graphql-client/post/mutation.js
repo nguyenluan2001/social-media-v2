@@ -9,4 +9,28 @@ const createPost=gql`
         
     }
 `
-export {createPost}
+const likePost=gql`
+    mutation likePost($postID:ID)
+    {
+        likePost(postID:$postID)
+    }
+`
+const commentPost=gql`
+    mutation commentPost($postID:ID,$content:String)
+    {
+        commentPost(postID:$postID,content:$content)
+    }
+`
+const editPost=gql`
+    mutation editPost($postID:ID,$body:String)
+    {
+        editPost(postID:$postID,body:$body)
+    }
+`
+const deletePost=gql`
+    mutation deletePost($postID:ID)
+    {
+        deletePost(postID:$postID)
+    }
+`
+export {createPost,likePost,commentPost,deletePost,editPost}

@@ -1,43 +1,126 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
     Container,
     UserInfo, InteractSection,
     ListAction, CommentSection,
-    ListComment
+    ListComment, TopSection
 } from "./style"
 import { BiLike, BiMessageAlt, BiShare } from "react-icons/bi"
 import { Link } from 'react-router-dom'
+import { likePost, commentPost, deletePost } from "../../graphql-client/post/mutation"
+import { getPosts } from "../../graphql-client/post/query"
+import { useMutation } from "@apollo/client"
+import { AuthContext } from "../../services/context/Auth"
+import ModalShowLikes from '../modalShowLikes/ModalShowLikes'
+import { FaEllipsisH } from "react-icons/fa"
+import ModalEditPost from '../modalEditPost/ModalEditPost'
 function PostItem({ post }) {
     const [toggleComments, setToggleComment] = useState(false)
-    let date = new Date(post?.createdAt)
-    console.log(post?.createdAt)
-    console.log(date)
+    const [likePostMutation, dataMutationLike] = useMutation(likePost)
+    const [commentPostMutation, dataMutationComment] = useMutation(commentPost)
+    const [deletePostMutation, dataMutationDelete] = useMutation(deletePost)
+    const { authUser } = useContext(AuthContext)
+    const [toggleModalShowLikes, setToggleModalShowLikes] = useState(false)
+    const [toggleModalEditPost, setToggleModalEditPost] = useState(false)
+    const [toggleSetting, setToggleSetting] = useState(false)
+    const [commentContent, setCommentContent] = useState("")
+    console.log(authUser)
+    function handleLikePost() {
+        likePostMutation({
+            variables: {
+                postID: post.id
+            },
+            refetchQueries: [{ query: getPosts }]
+        })
+    }
+    function handleChangeComment(e) {
+        setCommentContent(e.target.value)
+    }
+    function handleSubmitComment(e) {
+        e.preventDefault()
+        commentPostMutation({
+            variables: {
+                postID: post.id,
+                content: commentContent
+            },
+            refetchQueries: [{ query: getPosts }]
+        })
+        setCommentContent("")
+    }
+    function handleDeletePost() {
+        deletePostMutation({
+            variables: {
+                postID: post.id
+            },
+            refetchQueries: [{ query: getPosts }]
+        })
+        
+        setToggleSetting(false)
+    }
     return (
         <Container>
-            <UserInfo>
-                <Link to="/" className="avatar">
-                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
-                </Link>
-                <div className="wp-name">
-                    <span className="name">
-                        <Link to="/">{post?.user.username}</Link>
-                    </span>
-                    <span>2 hours</span>
+            <TopSection>
+                <UserInfo>
+                    <Link to={`/user/${post?.user.id}`} className="avatar">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
+                    </Link>
+                    <div className="wp-name">
+                        <span className="name">
+                            <Link to={`/user/${post?.user.id}`}>{post?.user.username}</Link>
+                        </span>
+                        <span>2 hours</span>
+                    </div>
+                </UserInfo>
+                <div className="setting">
+                    <div className="icon" onClick={() => setToggleSetting(pre => !pre)}>
+                        <FaEllipsisH></FaEllipsisH>
+                    </div>
+                    {toggleSetting && <ul className="list-settings">
+
+                        {
+                            post.user.id == authUser.id
+                                ? <>
+                                    <li>Save post</li>
+                                    <li>Hide post</li>
+                                    <li onClick={()=>setToggleModalEditPost(true)}>Edit post</li>
+                                    <li onClick={() => handleDeletePost()}>Delete post</li>
+                                </>
+                                : <>
+                                    <li>Save post</li>
+                                    <li>Hide post</li>
+                                </>
+                        }
+
+                    </ul>}
                 </div>
-            </UserInfo>
+            </TopSection>
             <div className="post-content">
                 <p>{post?.body}</p>
             </div>
             <div className="interact-info">
-                <div className="likes">1000</div>
-                <div className="comments" onClick={() => setToggleComment(pre => !pre)}>100 comments</div>
+                <div className="likes" onClick={() => setToggleModalShowLikes(true)}>
+                    <img src="https://i.pinimg.com/originals/39/44/6c/39446caa52f53369b92bc97253d2b2f1.png" alt="" />
+                    {post?.likes.findIndex(item => item.id == authUser.id) == -1
+                        ? <span>{post?.likes.length} people likes this post</span>
+                        : <span>You and {post?.likes.length - 1} others </span>
+                    }
+                </div>
+                <div className="comments" onClick={() => setToggleComment(pre => !pre)}>
+                    {post?.comments.length} comments
+                </div>
             </div>
             <InteractSection>
                 <ListAction>
-                    <li>
-                        <BiLike></BiLike>
-                        <span>Like</span>
-                    </li>
+                    {post.likes.findIndex(item => item.id == authUser.id) == -1
+                        ? <li onClick={() => handleLikePost()}>
+                            <BiLike></BiLike>
+                            <span>Like</span>
+                        </li>
+                        : <li onClick={() => handleLikePost()} className="liked">
+                            <BiLike></BiLike>
+                            <span>Unlike</span>
+                        </li>
+                    }
                     <li>
                         <BiMessageAlt></BiMessageAlt>
                         <span>Comment</span>
@@ -49,32 +132,30 @@ function PostItem({ post }) {
                 </ListAction>
                 {toggleComments && <ListComment>
                     <CommentSection>
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
-                        <input type="text" placeholder="Type something..." />
+                        <form action="" onSubmit={(e) => handleSubmitComment(e)}>
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
+                            <input type="text" placeholder="Type something..." value={commentContent} onChange={(e) => handleChangeComment(e)} />
+                        </form>
                     </CommentSection>
-                    <li>
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
-                        <div className="wp-comment-content">
-                            <span className="username">luannguyen</span>
-                            <span>Lorem ipsum dolor sit amet.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
-                        <div className="wp-comment-content">
-                            <span className="username">luannguyen</span>
-                            <span>Lorem ipsum dolor sit amet.</span>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
-                        <div className="wp-comment-content">
-                            <span className="username">luannguyen</span>
-                            <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi, nam? Soluta laborum nesciunt impedit. Et corporis quibusdam veniam ab autem.</span>
-                        </div>
-                    </li>
+                    {
+                        post.comments.map(item => {
+                            return (
+                                <li>
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
+                                    <div className="wp-comment-content">
+                                        <span className="username">{item.user.username}</span>
+                                        <span>{item.content}</span>
+                                    </div>
+                                </li>
+                            )
+                        })
+                    }
+
+
                 </ListComment>}
             </InteractSection>
+            {toggleModalShowLikes && <ModalShowLikes likes={post?.likes} setToggleModalShowLikes={setToggleModalShowLikes}></ModalShowLikes>}
+            {toggleModalEditPost&&<ModalEditPost post={post} setToggleModalEditPost={setToggleModalEditPost}></ModalEditPost>}
         </Container>
     )
 }

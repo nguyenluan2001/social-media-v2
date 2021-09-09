@@ -20,4 +20,10 @@ const login=gql`
         }
     }
 `
-export {register,login}
+const addFriend=gql`
+    mutation addFriend($userID:ID)
+    {
+        addFriend(userID:$userID)
+    }
+`
+export {register,login,addFriend}

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import styled from "styled-components"
 export const Container = styled.div`
 display:flex;
@@ -9,11 +10,13 @@ position:sticky;
 top:0;
 z-index:10;
 `
-export const Logo = styled.p`
+export const Logo = styled(Link)`
 margin:0;
 font-size:1.5rem;
 font-weight:bold;
 width:calc(100%/3);
+color:white;
+text-decoration:none;
 `
 export const Search = styled.div`
 width:calc(100%/3);
