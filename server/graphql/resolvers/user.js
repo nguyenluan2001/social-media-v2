@@ -22,8 +22,22 @@ const userResolver={
         }
     },
     Mutation:{
-        register:async (parent,args,{userHelper})=>{
-            return userHelper.register(args)
+        register:async (parent,args,{userHelper,pubsub})=>{
+            // const user={
+            //     username:args.username,
+            //     email:args.email,
+            //     password:args.password,
+            //     gender:args.gender
+            // }
+            // pubsub.publish("NEW_USER",{
+            //     newUser:{
+            //         username:args.username,
+            //         email:args.email,
+            //         password:args.password,
+            //         gender:args.gender
+            //     }
+            // })
+            return userHelper.register(args,pubsub)
            
         },
         login:async (_,args,{userHelper})=>{

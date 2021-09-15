@@ -13,12 +13,26 @@ const likePost=gql`
     mutation likePost($postID:ID)
     {
         likePost(postID:$postID)
+        {
+            postID
+            user{
+                id
+                username
+            }
+        }
     }
 `
 const commentPost=gql`
     mutation commentPost($postID:ID,$content:String)
     {
         commentPost(postID:$postID,content:$content)
+        {
+            content
+            user{
+                id
+                username
+            }
+        }
     }
 `
 const editPost=gql`

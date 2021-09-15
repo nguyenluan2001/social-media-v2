@@ -71,7 +71,6 @@ const addFriend=async (userID,req)=>{
     console.log(user)
     if(user)
     {
-
        let friendsOfAuthUser=user.friends?user.friends:[]
        let friendsOfMakeFriendUser=makeFriendUser.friends?makeFriendUser.friends:[]
        if(friendsOfAuthUser.findIndex(item=>item==userID)!=-1)
@@ -88,7 +87,7 @@ const addFriend=async (userID,req)=>{
        }
        await User.updateOne({_id:user._id},{friends:friendsOfAuthUser})
        await User.updateOne({_id:userID},{friends:friendsOfMakeFriendUser})
-       return true
+       return user._id
     }
     else
     {

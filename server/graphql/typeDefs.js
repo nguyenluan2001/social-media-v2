@@ -18,13 +18,26 @@ const typeDefs = gql`
         id:ID
         body:String
         user:User
-        likes:[User]
+        likes:[Like]
         comments:[Comment]
         createdAt:String
     }
+    type Like{
+        user:User,
+        postID:ID
+        status:String
+    }
     type Comment{
         user:User
-        content:String
+        content:String,
+        postID:ID
+    }
+    type Subscription{
+        newUser:User,
+        newPost:Post,
+        newLike:Like,
+        newComment:Comment,
+        deletePost:ID
     }
     type Query{
         # ====== User ======
@@ -37,11 +50,11 @@ const typeDefs = gql`
     #    ====== User =======
         register(username:String,email:String,password:String,gender:String):User
         login(email:String,password:String):User
-        addFriend(userID:ID):Boolean
+        addFriend(userID:ID):Friend
         # ======== Post ======
         createPost(body:String):Post
-        likePost(postID:ID):Boolean
-        commentPost(postID:ID,content:String):Boolean
+        likePost(postID:ID):Like
+        commentPost(postID:ID,content:String):Comment
         editPost(postID:ID,body:String):Boolean
         deletePost(postID:ID):Boolean
         

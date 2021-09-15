@@ -9,28 +9,139 @@ import { BiLike, BiMessageAlt, BiShare } from "react-icons/bi"
 import { Link } from 'react-router-dom'
 import { likePost, commentPost, deletePost } from "../../graphql-client/post/mutation"
 import { getPosts } from "../../graphql-client/post/query"
+import { getUser, checkAuth } from "../../graphql-client/user/query"
 import { useMutation } from "@apollo/client"
 import { AuthContext } from "../../services/context/Auth"
 import ModalShowLikes from '../modalShowLikes/ModalShowLikes'
 import { FaEllipsisH } from "react-icons/fa"
 import ModalEditPost from '../modalEditPost/ModalEditPost'
-function PostItem({ post }) {
+import { useDispatch } from "react-redux"
+import { deletePost as deletepostProfile } from "../../services/redux/slices/profileSlice"
+import { gql } from "@apollo/client"
+function PostItem({ post,setSelectedPost }) {
     const [toggleComments, setToggleComment] = useState(false)
-    const [likePostMutation, dataMutationLike] = useMutation(likePost)
-    const [commentPostMutation, dataMutationComment] = useMutation(commentPost)
-    const [deletePostMutation, dataMutationDelete] = useMutation(deletePost)
+
+    const [commentPostMutation, dataMutationComment] = useMutation(commentPost, {
+        update(cache, { data: commentPostMutation }) {
+            console.log(commentPostMutation)
+            console.log(cache)
+            const postItem = cache.readFragment(
+                {
+                    id: `Post:${post.id}`, // The value of the to-do item's cache ID
+                    fragment: gql`
+                      fragment post on Post {
+                        comments{
+                            content
+                            user{
+                                id
+                                username
+                            }
+                        }
+                      }
+                    `,
+                }
+            )
+            let newComments = [...post.comments]
+            newComments.push(commentPostMutation.commentPost)
+            // console.log(newLikes)
+            const temp = cache.writeFragment(
+                {
+                    id: `Post:${post.id}`, // The value of the to-do item's cache ID
+                    fragment: gql`
+                      fragment post on Post {
+                        comments
+                        {
+                            content
+                            user{
+                                id
+                                username
+                            }
+                        }
+                      }
+                    `,
+                    data: {
+                        comments: newComments
+                    }
+                }
+            )
+            // console.log(temp)
+
+        }
+    })
+    const [deletePostMutation, dataMutationDelete] = useMutation(deletePost
+    //     ,{
+    //     update(cache,data)
+    //     {
+    //        cache.evict({
+    //            id:`Post:${post.id}`
+    //        })
+    //     }
+    // }
+    )
     const { authUser } = useContext(AuthContext)
+    const [likePostMutation, dataMutationLike] = useMutation(likePost
+        // , {
+        // update(cache, { data: likePostMutation }) {
+        //     console.log(likePostMutation)
+        //     console.log(cache)
+        //     const postItem = cache.readFragment(
+        //         {
+        //             id: `Post:${post.id}`, // The value of the to-do item's cache ID
+        //             fragment: gql`
+        //               fragment post on Post {
+        //                 likes{
+        //                     id
+        //                     username
+        //                 }
+        //               }
+        //             `,
+        //         }
+        //     )
+        //     let newLikes = [...post.likes]
+        //     let indexUserLike = newLikes.findIndex(item => item.id == authUser.id)
+        //     console.log(indexUserLike)
+        //     if (indexUserLike == -1) {
+        //         newLikes.push(likePostMutation.likePost)
+        //     }
+        //     else {
+        //         newLikes.splice(indexUserLike, 1)
+        //     }
+        //     // console.log(newLikes)
+        //     const temp = cache.writeFragment(
+        //         {
+        //             id: `Post:${post.id}`, // The value of the to-do item's cache ID
+        //             fragment: gql`
+        //               fragment post on Post {
+        //                 likes
+        //                 {
+        //                     id
+        //                     username
+        //                 }
+        //               }
+        //             `,
+        //             data: {
+        //                 likes: newLikes
+        //             }
+        //         }
+        //     )
+        //     // console.log(temp)
+
+        // }
+    // }
+    )
     const [toggleModalShowLikes, setToggleModalShowLikes] = useState(false)
     const [toggleModalEditPost, setToggleModalEditPost] = useState(false)
     const [toggleSetting, setToggleSetting] = useState(false)
     const [commentContent, setCommentContent] = useState("")
-    console.log(authUser)
+    const dispatch = useDispatch()
     function handleLikePost() {
         likePostMutation({
             variables: {
                 postID: post.id
             },
-            refetchQueries: [{ query: getPosts }]
+            // refetchQueries: [{ query: getPosts },{query:getUser,variables:{
+            //     userID:"6135936580e157748b878df4"
+            // }}]
         })
     }
     function handleChangeComment(e) {
@@ -43,20 +154,22 @@ function PostItem({ post }) {
                 postID: post.id,
                 content: commentContent
             },
-            refetchQueries: [{ query: getPosts }]
+            // refetchQueries: [{ query: getPosts }]
         })
         setCommentContent("")
     }
     function handleDeletePost() {
+        // dispatch(deletepostProfile(post))
+        setToggleSetting(false)
         deletePostMutation({
             variables: {
                 postID: post.id
             },
             refetchQueries: [{ query: getPosts }]
         })
-        
-        setToggleSetting(false)
+
     }
+    console.log("postItem")
     return (
         <Container>
             <TopSection>
@@ -82,7 +195,7 @@ function PostItem({ post }) {
                                 ? <>
                                     <li>Save post</li>
                                     <li>Hide post</li>
-                                    <li onClick={()=>setToggleModalEditPost(true)}>Edit post</li>
+                                    <li onClick={() => setToggleModalEditPost(true)}>Edit post</li>
                                     <li onClick={() => handleDeletePost()}>Delete post</li>
                                 </>
                                 : <>
@@ -100,7 +213,7 @@ function PostItem({ post }) {
             <div className="interact-info">
                 <div className="likes" onClick={() => setToggleModalShowLikes(true)}>
                     <img src="https://i.pinimg.com/originals/39/44/6c/39446caa52f53369b92bc97253d2b2f1.png" alt="" />
-                    {post?.likes.findIndex(item => item.id == authUser.id) == -1
+                    {post?.likes.findIndex(item => item?.user.id == authUser.id) == -1
                         ? <span>{post?.likes.length} people likes this post</span>
                         : <span>You and {post?.likes.length - 1} others </span>
                     }
@@ -111,7 +224,7 @@ function PostItem({ post }) {
             </div>
             <InteractSection>
                 <ListAction>
-                    {post.likes.findIndex(item => item.id == authUser.id) == -1
+                    {post.likes.findIndex(item => item?.user.id == authUser.id) == -1
                         ? <li onClick={() => handleLikePost()}>
                             <BiLike></BiLike>
                             <span>Like</span>
@@ -155,7 +268,7 @@ function PostItem({ post }) {
                 </ListComment>}
             </InteractSection>
             {toggleModalShowLikes && <ModalShowLikes likes={post?.likes} setToggleModalShowLikes={setToggleModalShowLikes}></ModalShowLikes>}
-            {toggleModalEditPost&&<ModalEditPost post={post} setToggleModalEditPost={setToggleModalEditPost}></ModalEditPost>}
+            {toggleModalEditPost && <ModalEditPost post={post} setToggleModalEditPost={setToggleModalEditPost}></ModalEditPost>}
         </Container>
     )
 }

@@ -15,7 +15,7 @@ function ModalShowLikes({ setToggleModalShowLikes, likes }) {
                                         <Link to={`/user/${item.id}`} className="avatar">
                                             <img src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png" alt="" />
                                         </Link>
-                                        <Link to={`/user/${item.id}`} className="username">{item?.username}</Link>
+                                        <Link to={`/user/${item?.user?.id}`} className="username">{item?.user?.username}</Link>
                                     </div>
                                     <div className="action">
                                         <FaUserPlus></FaUserPlus>

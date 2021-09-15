@@ -11,8 +11,12 @@ const getPosts = gql`
                 username
             }
             likes{
-                id
-                username
+                postID
+                user
+                {
+                    id
+                    username
+                }
             }
             comments{
                 user{

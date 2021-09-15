@@ -1,9 +1,13 @@
 const checkAuthHelper=require("../helper/checkAuthHelper")
 const Post=require("../models/Post")
-const createPost=async (body,req)=>{
+const createPost=async (body,req,pubusb)=>{
     let user=await checkAuthHelper(req)
     let post=new Post({body:body,userID:user._id})
-    return await post.save()
+    post=await post.save()
+    pubusb.publish("NEW_POST",{
+        newPost:post
+    })
+    return post
 }
 const getAllPosts=async ()=>{
     return await Post.find({}).sort({createdAt:"desc"})
@@ -11,8 +15,7 @@ const getAllPosts=async ()=>{
 const getPostByUserID=async (userID)=>{
     return await Post.find({userID:userID}).sort({"createdAt":'desc'})
 }
-const likePost=async (req,postID)=>{
-    console.log(postID)
+const likePost=async (req,postID,pubsub)=>{
     let user=await checkAuthHelper(req)
     let post=await Post.findOne({_id:postID})
     let newLikes=post.likes?post.likes:[]
@@ -20,15 +23,47 @@ const likePost=async (req,postID)=>{
     {
         let index=newLikes.findIndex(item=>item==user._id)
         newLikes.splice(index,1)
+        pubsub.publish("NEW_LIKE",{
+            newLike:{
+                ...user._doc,
+                id:user._id,
+                postID:postID,
+                status:"unlike"
+               
+            }
+        })
     }
     else
     {
         newLikes.push(user._id)
+        pubsub.publish("NEW_LIKE",{
+            newLike:{
+                ...user._doc,
+                id:user._id,
+                postID:postID,
+                status:"like"
+               
+            }
+        })
+        console.log(111)
     }
     await Post.updateOne({_id:postID},{likes:newLikes})
-    return true
+    pubsub.publish("NEW_LIKE",{
+        newLike:{
+            ...user._doc,
+            id:user._id,
+            postID:postID
+           
+        }
+    })
+    return {
+        ...user._doc,
+        id:user._id,
+        postID:postID
+
+    }
 }
-const commentPost=async (postID,content,req)=>{
+const commentPost=async (postID,content,req,pubsub)=>{
     let user=await checkAuthHelper(req)
     let post=await Post.findOne({_id:postID})
 
@@ -42,13 +77,23 @@ const commentPost=async (postID,content,req)=>{
     },{
         comments:newComments
     })
-    console.log(content)
-    console.log(postID)
-    return true
+    pubsub.publish("NEW_COMMENT",{
+        newComment:{
+            postID:postID,
+            content:content,
+            ...user._doc,
+            userID:user._id
+        }
+    })
+    return {
+        content:content,
+        ...user._doc,
+        userID:user._id
+
+    }
 }
 const editPost=async (postID,body,req)=>{
     let user=await checkAuthHelper(req)
-    console.log(user)
     if(user)
     {
         await Post.updateOne({
@@ -65,11 +110,13 @@ const editPost=async (postID,body,req)=>{
         throw new Error("Authenticated fail")
     }
 }
-const deletePost=async (postID,req)=>{
+const deletePost=async (postID,req,pubsub)=>{
     let user=await checkAuthHelper(req)
-    console.log(user)
     if(user)
     {
+        pubsub.publish("DELETE_POST",{
+            deletePost:postID
+        })
 
         await Post.deleteOne({
             _id:postID,

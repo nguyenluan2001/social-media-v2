@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Switch, Route, useParams, NavLink } from "react-router-dom"
+import { gql } from "@apollo/client"
 import {
     Container, Content,
     WrapTopContent, WrapMainContent,
@@ -17,7 +18,8 @@ import ListFriends from './components/listFriends/ListFriends'
 import { AuthContext } from "../../services/context/Auth"
 import AllFriends from './components/allFriends/AllFriends'
 import PrivateRoute from '../../components/PrivateRoute'
-
+import { useSelector, useDispatch } from "react-redux"
+import { getData } from "../../services/redux/slices/profileSlice"
 function Profile(props) {
     const { id } = useParams()
     const { authUser } = useContext(AuthContext)
@@ -26,10 +28,43 @@ function Profile(props) {
             userID: id
         }
     })
-    const [addFriendMutation, dataMutation] = useMutation(addFriend)
-    console.log(data?.getUser)
-    console.log(authUser)
-    console.log(props)
+    const [addFriendMutation, dataMutation] = useMutation(addFriend, {
+        update(cache, { data: addFriendMutation }) {
+            let newFriends = [...data?.getUser.friends]
+            let index = newFriends.findIndex(item => item.id == authUser.id)
+            if (index == -1) {
+                newFriends.push(addFriendMutation.addFriend)
+                cache.writeFragment({
+                    id: `Friend:${authUser.id}`,
+                    fragment: gql`
+                         fragment friend on Friend {
+                            id
+                            username
+                            }
+                    `,
+                    data: {
+                        ...addFriendMutation.addFriend
+                    }
+                })
+            }
+            else {
+                newFriends.splice(index, 1)
+                cache.evict({
+                    id: `Friend:${authUser.id}`
+                })
+            }
+
+        }
+    })
+    const profile = useSelector(state => state.profile)
+    const dispatch = useDispatch()
+    console.log(profile)
+    useEffect(() => {
+        if (!loading) {
+            dispatch(getData(data?.getUser))
+
+        }
+    }, [loading])
     function handleAddFriend() {
         addFriendMutation({
             variables: {
@@ -92,7 +127,7 @@ function Profile(props) {
                             <ListPosts>
                                 <CreatePost></CreatePost>
                                 {
-                                    data?.getUser.posts.map(item => {
+                                    data?.getUser?.posts?.map(item => {
                                         return <PostItem post={item}></PostItem>
                                     })
                                 }
@@ -101,10 +136,10 @@ function Profile(props) {
                         </MainContent>
                     </WrapMainContent>
                 </Route>
-                <Route path={`${props.match.url}/friends`} 
-                render={(props)=>{
-                    return <AllFriends {...props} id={id}></AllFriends>
-                }}
+                <Route path={`${props.match.url}/friends`}
+                    render={(props) => {
+                        return <AllFriends {...props} id={id}></AllFriends>
+                    }}
                 ></Route>
             </Switch>
         </>
