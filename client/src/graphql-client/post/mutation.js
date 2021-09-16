@@ -47,4 +47,10 @@ const deletePost=gql`
         deletePost(postID:$postID)
     }
 `
-export {createPost,likePost,commentPost,deletePost,editPost}
+const savePost=gql`
+    mutation savePost($postID:ID)
+    {
+        savePost(postID:$postID)
+    }
+`
+export {createPost,likePost,commentPost,deletePost,editPost,savePost}

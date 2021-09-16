@@ -1,7 +1,12 @@
+const Post=require("../../models/Post")
 const userResolver={
     User:{
         posts:async (parent,args,{postHelper})=>{
             return await postHelper.getPostByUserID(parent._id)
+        },
+        savedPosts:async (parent,args,context)=>{
+            console.log("savedposts",parent.savedPosts)
+            return await Post.find({_id:{$in:parent.savedPosts}})
         }
     },
     Friend:{

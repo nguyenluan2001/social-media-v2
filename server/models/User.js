@@ -6,6 +6,7 @@ const userSchema=mongoose.Schema({
     friends:Array,
     avatar:String,
     background:String,
+    savedPosts:Array,
     gender:String
 })
 module.exports=mongoose.model("User",userSchema)

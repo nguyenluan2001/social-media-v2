@@ -52,6 +52,15 @@ const checkAuth = gql`
             gender
             avatar
             background
+            savedPosts{
+                id
+                body
+                user{
+                    id
+                    username
+                    avatar
+                }
+            }
         }
     }
 `

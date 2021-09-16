@@ -7,6 +7,7 @@ import Profile from '../../scenes/profile/Profile'
 import PrivateRoute from '../../components/PrivateRoute'
 import { Provider } from "react-redux"
 import { store } from "../../services/redux/store"
+import SavedPost from '../../scenes/savedPost/SavedPost'
 // ======
 function MainContent(props) {
     // const location = useLocation()
@@ -23,7 +24,7 @@ function MainContent(props) {
                         <Switch>
                             <Route path="/" exact component={Homepage}></Route>
                             <Route path="/user/:id" component={Profile} props={props}></Route>
-
+                            <Route path="/saved" component={SavedPost}></Route>
                         </Switch>
                     {/* </Router> */}
                     </Content>

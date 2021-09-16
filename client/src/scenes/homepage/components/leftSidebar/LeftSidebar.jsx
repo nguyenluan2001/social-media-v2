@@ -36,7 +36,7 @@ function LeftSidebar() {
                     </Link>
                 </li>
                 <li>
-                    <Link>
+                    <Link to="/saved">
                         <FaRegBookmark></FaRegBookmark>
                         <span>Bookmarks</span>
                     </Link>

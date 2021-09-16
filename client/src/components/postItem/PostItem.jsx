@@ -7,7 +7,7 @@ import {
 } from "./style"
 import { BiLike, BiMessageAlt, BiShare } from "react-icons/bi"
 import { Link } from 'react-router-dom'
-import { likePost, commentPost, deletePost } from "../../graphql-client/post/mutation"
+import { likePost, commentPost, deletePost,savePost } from "../../graphql-client/post/mutation"
 import { getPosts } from "../../graphql-client/post/query"
 import { getUser, checkAuth } from "../../graphql-client/user/query"
 import { useMutation } from "@apollo/client"
@@ -131,6 +131,7 @@ function PostItem({ post,setSelectedPost }) {
         // }
     // }
     )
+    const [savePostMutation,dataSavePost]=useMutation(savePost)
     const [toggleModalShowLikes, setToggleModalShowLikes] = useState(false)
     const [toggleModalEditPost, setToggleModalEditPost] = useState(false)
     const [toggleSetting, setToggleSetting] = useState(false)
@@ -171,6 +172,15 @@ function PostItem({ post,setSelectedPost }) {
         })
 
     }
+    function handleSavePost()
+    {
+        savePostMutation({
+            variables:{
+                postID:post.id
+            }
+        })
+        setToggleSetting(false)
+    }
     console.log("postItem")
     return (
         <Container>
@@ -199,7 +209,7 @@ function PostItem({ post,setSelectedPost }) {
                         {
                             post.user.id == authUser.id
                                 ? <>
-                                    <li>Save post</li>
+                                    <li onClick={()=>handleSavePost()}>Save post</li>
                                     <li>Hide post</li>
                                     <li onClick={() => setToggleModalEditPost(true)}>Edit post</li>
                                     <li onClick={() => handleDeletePost()}>Delete post</li>

@@ -42,7 +42,11 @@ const postResovler={
         },
         deletePost:async(_,{postID},{postHelper,req,pubsub})=>{
             return await postHelper.deletePost(postID,req,pubsub)
+        },
+        savePost:async (_,{postID},{postHelper,req})=>{
+            return await postHelper.savePost(postID,req)
         }
+
     }
 }
 module.exports=postResovler

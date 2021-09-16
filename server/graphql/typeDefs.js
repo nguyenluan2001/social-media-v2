@@ -10,6 +10,7 @@ const typeDefs = gql`
         friends:[Friend]
         avatar:String
         background:String
+        savedPosts:[Post]
         token:String
     }
     type Friend{
@@ -64,6 +65,7 @@ const typeDefs = gql`
         commentPost(postID:ID,content:String):Comment
         editPost(postID:ID,body:String):Boolean
         deletePost(postID:ID):Boolean
+        savePost(postID:ID):Boolean
         
     }
 `

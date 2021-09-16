@@ -1,5 +1,6 @@
 const checkAuthHelper=require("../helper/checkAuthHelper")
 const Post=require("../models/Post")
+const User=require("../models/User")
 const createPost=async (body,req,pubusb)=>{
     let user=await checkAuthHelper(req)
     let post=new Post({body:body,userID:user._id})
@@ -129,7 +130,23 @@ const deletePost=async (postID,req,pubsub)=>{
         throw new Error("Authenticated fail")
     }
 }
+const savePost=async (postID,req)=>{
+    let user=await checkAuthHelper(req)
+    if(user)
+    {
+        let currentUser=await User.findOne({_id:user._id})
+       let savedPosts=currentUser.savedPosts?currentUser.savedPosts:[]
+       savedPosts.push(postID)
+       await User.updateOne({_id:user._id},{
+           savedPosts
+       })
+       return true
+    }
+    else {
+        throw new Error("Authenticated fail")
+    }
+}
 module.exports={createPost,
     getAllPosts,likePost,
     commentPost,getPostByUserID,
-    editPost,deletePost}
+    editPost,deletePost,savePost}
