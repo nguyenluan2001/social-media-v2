@@ -8,11 +8,15 @@ const typeDefs = gql`
         gender:String
         posts:[Post]
         friends:[Friend]
+        avatar:String
+        background:String
         token:String
     }
     type Friend{
         id:ID
         username:String
+        avatar:String
+        status:String
     }
     type Post{
         id:ID
@@ -34,8 +38,10 @@ const typeDefs = gql`
     }
     type Subscription{
         newUser:User,
+        newFriend:Friend,
         newPost:Post,
         newLike:Like,
+        newLikeProfile:Like,
         newComment:Comment,
         deletePost:ID
     }
@@ -51,6 +57,7 @@ const typeDefs = gql`
         register(username:String,email:String,password:String,gender:String):User
         login(email:String,password:String):User
         addFriend(userID:ID):Friend
+        updateProfile(avatar:String,background:String):User
         # ======== Post ======
         createPost(body:String):Post
         likePost(postID:ID):Like

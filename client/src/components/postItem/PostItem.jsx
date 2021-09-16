@@ -21,53 +21,55 @@ import { gql } from "@apollo/client"
 function PostItem({ post,setSelectedPost }) {
     const [toggleComments, setToggleComment] = useState(false)
 
-    const [commentPostMutation, dataMutationComment] = useMutation(commentPost, {
-        update(cache, { data: commentPostMutation }) {
-            console.log(commentPostMutation)
-            console.log(cache)
-            const postItem = cache.readFragment(
-                {
-                    id: `Post:${post.id}`, // The value of the to-do item's cache ID
-                    fragment: gql`
-                      fragment post on Post {
-                        comments{
-                            content
-                            user{
-                                id
-                                username
-                            }
-                        }
-                      }
-                    `,
-                }
-            )
-            let newComments = [...post.comments]
-            newComments.push(commentPostMutation.commentPost)
-            // console.log(newLikes)
-            const temp = cache.writeFragment(
-                {
-                    id: `Post:${post.id}`, // The value of the to-do item's cache ID
-                    fragment: gql`
-                      fragment post on Post {
-                        comments
-                        {
-                            content
-                            user{
-                                id
-                                username
-                            }
-                        }
-                      }
-                    `,
-                    data: {
-                        comments: newComments
-                    }
-                }
-            )
-            // console.log(temp)
+    const [commentPostMutation, dataMutationComment] = useMutation(commentPost
+    //     , {
+    //     update(cache, { data: commentPostMutation }) {
+    //         console.log(commentPostMutation)
+    //         console.log(cache)
+    //         const postItem = cache.readFragment(
+    //             {
+    //                 id: `Post:${post.id}`, // The value of the to-do item's cache ID
+    //                 fragment: gql`
+    //                   fragment post on Post {
+    //                     comments{
+    //                         content
+    //                         user{
+    //                             id
+    //                             username
+    //                         }
+    //                     }
+    //                   }
+    //                 `,
+    //             }
+    //         )
+    //         let newComments = [...post.comments]
+    //         newComments.push(commentPostMutation.commentPost)
+    //         // console.log(newLikes)
+    //         const temp = cache.writeFragment(
+    //             {
+    //                 id: `Post:${post.id}`, // The value of the to-do item's cache ID
+    //                 fragment: gql`
+    //                   fragment post on Post {
+    //                     comments
+    //                     {
+    //                         content
+    //                         user{
+    //                             id
+    //                             username
+    //                         }
+    //                     }
+    //                   }
+    //                 `,
+    //                 data: {
+    //                     comments: newComments
+    //                 }
+    //             }
+    //         )
+    //         // console.log(temp)
 
-        }
-    })
+    //     }
+    // }
+    )
     const [deletePostMutation, dataMutationDelete] = useMutation(deletePost
     //     ,{
     //     update(cache,data)
@@ -175,7 +177,11 @@ function PostItem({ post,setSelectedPost }) {
             <TopSection>
                 <UserInfo>
                     <Link to={`/user/${post?.user.id}`} className="avatar">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
+                        {
+                            post?.user?.avatar
+                            ?<img src={post?.user?.avatar} alt="" />
+                            :<img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
+                        }
                     </Link>
                     <div className="wp-name">
                         <span className="name">

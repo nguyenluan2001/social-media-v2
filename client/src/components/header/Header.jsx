@@ -11,6 +11,7 @@ import { AuthContext } from "../../services/context/Auth"
 function Header() {
     const { authUser,setIsAuthenticated } = useContext(AuthContext)
     const [togglePannel, setTogglePannel] = useState(false)
+    const [toggleUpdateProfile,setToggleUpdateProfile]=useState(false)
     const history=useHistory()
     function handleLogout()
     {
@@ -49,11 +50,21 @@ function Header() {
                 </Notifications>
                 <User>
                     <div className="avatar" onClick={()=>setTogglePannel(pre=>!pre)}>
+                        {
+                            authUser?.avatar
+                            ?<img src={authUser?.avatar}/>
+                            :
                         <img src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png" alt="" />
+                        }
                     </div>
                     {togglePannel && <div className="pannel">
-                        <Link to="#">
-                            <img src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png" alt="" />
+                        <Link to={`/user/${authUser.id}`}>
+                        {
+                            authUser?.avatar
+                            ?<img src={authUser?.avatar}/>
+                            :
+                        <img src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png" alt="" />
+                        }
                             <div className="wp-username">
                                 <p className="username">{authUser?.username}</p>
                                 <p>View your profile</p>

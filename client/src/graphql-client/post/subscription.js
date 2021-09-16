@@ -26,6 +26,7 @@ const newPost=gql`
             #     content
             # }
             # createdAt
+            id
             body
             user{
                 id

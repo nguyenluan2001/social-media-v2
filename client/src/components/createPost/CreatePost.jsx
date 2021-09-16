@@ -1,22 +1,22 @@
-import React,{useState} from 'react'
+import React, { useState, useContext } from 'react'
 import { Container, TopSection, FootSection, ListItem } from "./style"
 import { FaPhotoVideo, FaTag, FaMapMarkerAlt, FaRegLaughSquint } from "react-icons/fa"
-import {createPost} from '../../graphql-client/post/mutation'
-import {getPosts} from "../../graphql-client/post/query"
-import {getUser} from "../../graphql-client/user/query"
-import {useMutation} from "@apollo/client"
+import { createPost } from '../../graphql-client/post/mutation'
+import { getPosts } from "../../graphql-client/post/query"
+import { getUser } from "../../graphql-client/user/query"
+import { useMutation } from "@apollo/client"
+import { AuthContext } from "../../services/context/Auth"
 function CreatePost() {
-    const [createPostMutation,dataMutation]=useMutation(createPost)
-    const [body,setBody]=useState("")
-    function handleChange(e)
-    {
+    const [createPostMutation, dataMutation] = useMutation(createPost)
+    const [body, setBody] = useState("")
+    const { authUser } = useContext(AuthContext)
+    function handleChange(e) {
         setBody(e.target.value)
     }
-    function handleShare()
-    {
+    function handleShare() {
         createPostMutation({
-            variables:{
-                body:body
+            variables: {
+                body: body
             },
             // refetchQueries:[{query:getPosts}]
         })
@@ -25,8 +25,13 @@ function CreatePost() {
     return (
         <Container>
             <TopSection>
-                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
-                <textarea name="" id="" placeholder="What are you thinking?" onChange={(e)=>handleChange(e)} value={body}></textarea>
+                {
+                    authUser?.avatar
+                        ? <img src={authUser?.avatar} />
+                        :
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="" />
+                }
+                <textarea name="" id="" placeholder="What are you thinking?" onChange={(e) => handleChange(e)} value={body}></textarea>
             </TopSection>
             <FootSection>
                 <ListItem>
@@ -48,7 +53,7 @@ function CreatePost() {
                         <span>Feelings</span>
                     </li>
                 </ListItem>
-                <button className="share-btn" onClick={()=>handleShare()}>Share</button>
+                <button className="share-btn" onClick={() => handleShare()}>Share</button>
             </FootSection>
 
         </Container>

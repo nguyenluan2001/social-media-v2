@@ -5,12 +5,9 @@ const userResolver={
         }
     },
     Friend:{
-        id:async (parent,args)=>{
-            return parent
-        },
-        username:async (parent,args,{userHelper})=>{
-            let user=await userHelper.getUser(parent)
-            return user.username
+        avatar:async (parent,args,{userHelper})=>{
+            let user=await userHelper.getUser(parent.id)
+            return user.avatar
         }
     },
     Query:{
@@ -43,8 +40,11 @@ const userResolver={
         login:async (_,args,{userHelper})=>{
             return userHelper.login(args)
         },
-        addFriend:async (_,{userID},{userHelper,req})=>{
-            return await userHelper.addFriend(userID,req)
+        addFriend:async (_,{userID},{userHelper,req,pubsub})=>{
+            return await userHelper.addFriend(userID,req,pubsub)
+        },
+        updateProfile:async (_,{avatar,background},{req,userHelper})=>{
+            return userHelper.updateProfile(avatar,background,req)
         }
     }
 }

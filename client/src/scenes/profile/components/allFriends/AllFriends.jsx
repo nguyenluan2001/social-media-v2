@@ -30,7 +30,7 @@ function AllFriends(props) {
                             return (
                                 <li>
                                     <Link to={`/user/${item.id}`}>
-                                        <img src="https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg" alt="" />
+                                        <img src={item?.avatar} alt="" />
                                     </Link>
                                     <Link to={`/user/${item.id}`} className="username">{item?.username}</Link>
                                 </li>

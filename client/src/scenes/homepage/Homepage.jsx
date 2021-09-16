@@ -3,7 +3,7 @@ import LeftSidebar from './components/leftSidebar/LeftSidebar'
 import NewFeed from './components/newFeed/NewFeed'
 import { Container } from "./style"
 function Homepage() {
-    
+   console.log("homepage") 
     return (
         <Container>
             <LeftSidebar></LeftSidebar>

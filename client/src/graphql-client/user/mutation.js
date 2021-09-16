@@ -30,4 +30,16 @@ const addFriend=gql`
         }
     }
 `
-export {register,login,addFriend}
+const updateProfile=gql`
+    mutation updateProfile($avatar:String,$background:String)
+    {
+        updateProfile(avatar:$avatar,background:$background)
+        {
+            id
+            username
+            avatar
+            background
+        }
+    }
+`
+export {register,login,addFriend,updateProfile}

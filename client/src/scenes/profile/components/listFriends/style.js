@@ -26,9 +26,14 @@ border-radius:10px;
             &:hover{
                 text-decoration:underline;
             }
-            img{
-                width:100%;
+            .avatar{
+                height:135px;
+                overflow:hidden;
                 border-radius:10px;
+                img{
+                    width:100%;
+                }
+
             }
         }
     }

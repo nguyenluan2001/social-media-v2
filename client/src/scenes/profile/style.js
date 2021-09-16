@@ -28,7 +28,7 @@ export const Banner=styled.div`
     .cover-img{
         width:100%;
     }
-    .avatar{
+    .wp-avatar{
         width:100%;
         height:100%;
         position:absolute;
@@ -39,14 +39,17 @@ export const Banner=styled.div`
         display:flex;
         justify-content:center;
         align-items:end;
-        img{
-            width:200px;
-            height:200px;
-            border-radius:50%;
-            overflow:hidden;
-            border:5px solid white;
+        .avatar{
             position:absolute;
             bottom:-10%;
+            width:200px;
+            height:200px;
+            overflow:hidden;
+            border:5px solid white;
+            border-radius:50%;
+        img{
+            width:100%;
+        }
         }
     }
 }

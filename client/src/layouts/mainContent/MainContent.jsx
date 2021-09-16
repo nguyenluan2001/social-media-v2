@@ -8,9 +8,6 @@ import PrivateRoute from '../../components/PrivateRoute'
 import { Provider } from "react-redux"
 import { store } from "../../services/redux/store"
 // ======
-import { useQuery } from "@apollo/client"
-import { getPosts } from "../../graphql-client/post/query"
-import { newLike } from "../../graphql-client/post/subscription"
 function MainContent(props) {
     // const location = useLocation()
 
@@ -21,15 +18,15 @@ function MainContent(props) {
 
                 <Container>
                     <Header></Header>
-                    {/* <Content> */}
-                    <Router>
+                    <Content>
+                    {/* <Router> */}
                         <Switch>
                             <Route path="/" exact component={Homepage}></Route>
                             <Route path="/user/:id" component={Profile} props={props}></Route>
 
                         </Switch>
-                    </Router>
-                    {/* </Content> */}
+                    {/* </Router> */}
+                    </Content>
 
                 </Container>
                 </Provider>

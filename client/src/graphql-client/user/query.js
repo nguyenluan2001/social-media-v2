@@ -9,8 +9,13 @@ const getUser = gql`
                 id
                 body
                 likes{
-                    id
-                    username
+                    user
+                    {
+                        id
+                        username
+                        avatar
+                    }
+
                 }
                 comments{
                     content
@@ -22,12 +27,16 @@ const getUser = gql`
                 user{
                     id
                     username
+                    avatar
                 }
             }
             friends{
                 id
                 username
+                avatar
             }
+            avatar
+            background
 
         }
     }
@@ -41,6 +50,8 @@ const checkAuth = gql`
             username
             email
             gender
+            avatar
+            background
         }
     }
 `

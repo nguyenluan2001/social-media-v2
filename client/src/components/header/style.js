@@ -90,6 +90,7 @@ img{
         color:black;
         padding:0.5rem;
         border-radius:10px;
+        cursor:pointer;
         &:hover{
             background:rgb(240,242,245);
         }
