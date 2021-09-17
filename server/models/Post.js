@@ -4,6 +4,7 @@ const schemaOptions = {
   };
 const postSchema=mongoose.Schema({
     body:String,
+    media:String,
     userID:String,
     likes:Array,
     comments:Array

@@ -28,8 +28,8 @@ const postResovler={
         }
     },
     Mutation:{
-        createPost:async (parent,{body},{postHelper,req,pubsub})=>{
-            return await postHelper.createPost(body,req,pubsub)
+        createPost:async (parent,{body,media},{postHelper,req,pubsub})=>{
+            return await postHelper.createPost(body,media,req,pubsub)
         },
         likePost:async (parent,{postID},{postHelper,req,pubsub})=>{
             return await postHelper.likePost(req,postID,pubsub)

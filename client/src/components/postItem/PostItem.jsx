@@ -225,6 +225,13 @@ function PostItem({ post,setSelectedPost }) {
             </TopSection>
             <div className="post-content">
                 <p>{post?.body}</p>
+                {
+                   post?.media&&( post?.media?.split("%2F")[1]=="images"
+                    ?<img src={post?.media} alt="" />
+                    :<video controls>
+                        <source src={post?.media} />
+                    </video>)
+                }
             </div>
             <div className="interact-info">
                 <div className="likes" onClick={() => setToggleModalShowLikes(true)}>

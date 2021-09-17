@@ -28,6 +28,7 @@ const newPost=gql`
             # createdAt
             id
             body
+            media
             user{
                 id
                 username

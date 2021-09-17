@@ -1,9 +1,9 @@
 const checkAuthHelper=require("../helper/checkAuthHelper")
 const Post=require("../models/Post")
 const User=require("../models/User")
-const createPost=async (body,req,pubusb)=>{
+const createPost=async (body,media,req,pubusb)=>{
     let user=await checkAuthHelper(req)
-    let post=new Post({body:body,userID:user._id})
+    let post=new Post({body:body,media:media,userID:user._id})
     post=await post.save()
     pubusb.publish("NEW_POST",{
         newPost:post

@@ -104,7 +104,7 @@ function NewFeed() {
                     
                    if(item.id==newComment.postID)
                    {
-                       if(item.comments[item.comments.length-1].content==newComment.content)
+                       if(item?.comments[item.comments.length-1]?.content==newComment.content)
                        {
                            return item
                        }

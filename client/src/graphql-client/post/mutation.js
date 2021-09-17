@@ -1,10 +1,11 @@
 import {gql} from "@apollo/client"
 const createPost=gql`
-    mutation createPost($body:String)
+    mutation createPost($body:String,$media:String)
     {
-        createPost(body:$body)
+        createPost(body:$body,media:$media)
         {
             body
+            media
         }
         
     }

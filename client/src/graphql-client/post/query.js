@@ -6,6 +6,7 @@ const getPosts = gql`
         {
             id
             body
+            media
             user{
                 id
                 username

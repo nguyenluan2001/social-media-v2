@@ -22,6 +22,7 @@ const typeDefs = gql`
     type Post{
         id:ID
         body:String
+        media:String
         user:User
         likes:[Like]
         comments:[Comment]
@@ -60,7 +61,7 @@ const typeDefs = gql`
         addFriend(userID:ID):Friend
         updateProfile(avatar:String,background:String):User
         # ======== Post ======
-        createPost(body:String):Post
+        createPost(body:String,media:String):Post
         likePost(postID:ID):Like
         commentPost(postID:ID,content:String):Comment
         editPost(postID:ID,body:String):Boolean
