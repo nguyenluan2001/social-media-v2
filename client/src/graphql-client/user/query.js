@@ -8,6 +8,7 @@ const getUser = gql`
             posts {
                 id
                 body
+                media
                 likes{
                     user
                     {

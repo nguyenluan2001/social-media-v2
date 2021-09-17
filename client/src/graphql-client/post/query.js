@@ -10,6 +10,7 @@ const getPosts = gql`
             user{
                 id
                 username
+                avatar
             }
             likes{
                 postID

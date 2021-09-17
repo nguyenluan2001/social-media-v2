@@ -28,9 +28,10 @@ border-radius:10px;
             }
             .avatar{
                 height:135px;
+                overflow:hidden;
+                border-radius:10px;
                 img{
                     width:100%;
-                    border-radius:10px;
                 }
 
             }

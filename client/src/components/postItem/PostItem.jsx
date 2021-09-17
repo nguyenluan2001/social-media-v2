@@ -6,6 +6,7 @@ import {
     ListComment, TopSection
 } from "./style"
 import { BiLike, BiMessageAlt, BiShare } from "react-icons/bi"
+import {FaRegBookmark,FaPen,FaTrashAlt,FaRegClock } from "react-icons/fa"
 import { Link } from 'react-router-dom'
 import { likePost, commentPost, deletePost,savePost } from "../../graphql-client/post/mutation"
 import { getPosts } from "../../graphql-client/post/query"
@@ -209,14 +210,26 @@ function PostItem({ post,setSelectedPost }) {
                         {
                             post.user.id == authUser.id
                                 ? <>
-                                    <li onClick={()=>handleSavePost()}>Save post</li>
-                                    <li>Hide post</li>
-                                    <li onClick={() => setToggleModalEditPost(true)}>Edit post</li>
-                                    <li onClick={() => handleDeletePost()}>Delete post</li>
+                                    <li onClick={()=>handleSavePost()}>
+                                        <FaRegBookmark></FaRegBookmark>
+                                        Save post</li>
+                                    <li>
+                                        <FaRegClock></FaRegClock>
+                                        Hide post</li>
+                                    <li onClick={() => setToggleModalEditPost(true)}>
+                                        <FaPen></FaPen>
+                                        Edit post</li>
+                                    <li onClick={() => handleDeletePost()}>
+                                        <FaTrashAlt></FaTrashAlt>
+                                        Delete post</li>
                                 </>
                                 : <>
-                                    <li>Save post</li>
-                                    <li>Hide post</li>
+                                    <li onClick={()=>handleSavePost()}>
+                                        <FaRegBookmark></FaRegBookmark>
+                                        Save post</li>
+                                    <li>
+                                        <FaRegClock></FaRegClock>
+                                        Hide post</li>
                                 </>
                         }
 
