@@ -38,6 +38,15 @@ const getUser = gql`
             }
             avatar
             background
+            savedPosts{
+                id
+                body
+                user{
+                    id
+                    username
+                    avatar
+                }
+            }
 
         }
     }

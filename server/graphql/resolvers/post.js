@@ -25,6 +25,9 @@ const postResovler={
     Query:{
         getPosts:async (parent,args,{postHelper,name,pubsub})=>{
             return await postHelper.getAllPosts()
+        },
+        getPost:async (_,{postID},{postHelper})=>{
+            return await postHelper.getPost(postID)
         }
     },
     Mutation:{
@@ -45,6 +48,9 @@ const postResovler={
         },
         savePost:async (_,{postID},{postHelper,req})=>{
             return await postHelper.savePost(postID,req)
+        },
+        unSavePost:async (_,{postID},{postHelper,req})=>{
+            return await postHelper.unSavePost(postID,req)
         }
 
     }

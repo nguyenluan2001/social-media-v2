@@ -26,6 +26,23 @@ padding-top:20px;
     .content{
         .body{
             font-weight:bold;
+            font-size:1.5rem;
+            text-decoration:none;
+            color:black;
+            &:hover{
+                text-decoration:underline;
+            }
+        }
+        .unsave{
+            background:rgb(240,242,245);
+            font-weight:bold;
+            padding:0.5rem;
+            width:100px;
+            cursor:pointer;
+            border-radius:5px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
         }
     }
 }

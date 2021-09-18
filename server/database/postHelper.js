@@ -13,6 +13,9 @@ const createPost=async (body,media,req,pubusb)=>{
 const getAllPosts=async ()=>{
     return await Post.find({}).sort({createdAt:"desc"})
 }
+const getPost=async (postID)=>{
+    return await Post.findOne({_id:postID})
+}
 const getPostByUserID=async (userID)=>{
     return await Post.find({userID:userID}).sort({"createdAt":'desc'})
 }
@@ -140,7 +143,24 @@ const savePost=async (postID,req)=>{
        await User.updateOne({_id:user._id},{
            savedPosts
        })
-       return true
+       return await Post.findOne({_id:postID})
+    }
+    else {
+        throw new Error("Authenticated fail")
+    }
+}
+const unSavePost=async (postID,req)=>{
+
+    let user=await checkAuthHelper(req)
+    if(user)
+    {
+        let currentUser=await User.findOne({_id:user._id})
+       let savedPosts=currentUser.savedPosts
+       savedPosts=savedPosts.filter(item=>item!=postID)
+       await User.updateOne({_id:user._id},{
+           savedPosts
+       })
+       return postID
     }
     else {
         throw new Error("Authenticated fail")
@@ -149,4 +169,4 @@ const savePost=async (postID,req)=>{
 module.exports={createPost,
     getAllPosts,likePost,
     commentPost,getPostByUserID,
-    editPost,deletePost,savePost}
+    editPost,deletePost,savePost,getPost,unSavePost}

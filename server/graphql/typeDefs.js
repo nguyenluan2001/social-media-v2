@@ -53,6 +53,7 @@ const typeDefs = gql`
       checkAuth:User
     #   ========= Post ======
      getPosts:[Post]
+     getPost(postID:String):Post
     }
     type Mutation{
     #    ====== User =======
@@ -66,7 +67,8 @@ const typeDefs = gql`
         commentPost(postID:ID,content:String):Comment
         editPost(postID:ID,body:String):Boolean
         deletePost(postID:ID):Boolean
-        savePost(postID:ID):Boolean
+        savePost(postID:ID):Post
+        unSavePost(postID:ID):ID
         
     }
 `

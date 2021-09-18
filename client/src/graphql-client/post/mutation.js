@@ -52,6 +52,22 @@ const savePost=gql`
     mutation savePost($postID:ID)
     {
         savePost(postID:$postID)
+        {
+            id
+            body
+            user{
+                id
+                username
+                avatar
+            }
+        }
     }
 `
-export {createPost,likePost,commentPost,deletePost,editPost,savePost}
+const unSavePost=gql`
+    mutation unSavePost($postID:ID)
+    {
+        unSavePost(postID:$postID)
+    }
+`
+
+export {createPost,likePost,commentPost,deletePost,editPost,savePost,unSavePost}

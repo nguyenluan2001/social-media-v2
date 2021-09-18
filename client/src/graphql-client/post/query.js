@@ -24,6 +24,7 @@ const getPosts = gql`
                 user{
                     id
                     username
+                    avatar
                 }
                 content
             }
@@ -31,4 +32,38 @@ const getPosts = gql`
         }
     }
 `
-export { getPosts }
+const getPost=gql`
+    query getPost($postID:String)
+    {
+        getPost(postID:$postID)
+        {
+            id
+            body
+            media
+            user{
+                id
+                username
+                avatar
+            }
+            likes{
+                postID
+                user
+                {
+                    id
+                    username
+                }
+            }
+            comments{
+                user{
+                    id
+                    username
+                    avatar
+                }
+                content
+            }
+            createdAt
+            
+        }
+    }
+`
+export { getPosts,getPost }

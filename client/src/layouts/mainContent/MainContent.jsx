@@ -8,6 +8,7 @@ import PrivateRoute from '../../components/PrivateRoute'
 import { Provider } from "react-redux"
 import { store } from "../../services/redux/store"
 import SavedPost from '../../scenes/savedPost/SavedPost'
+import PostDetail from '../../scenes/postDetail/PostDetail'
 // ======
 function MainContent(props) {
     // const location = useLocation()
@@ -23,8 +24,9 @@ function MainContent(props) {
                     {/* <Router> */}
                         <Switch>
                             <Route path="/" exact component={Homepage}></Route>
-                            <Route path="/user/:id" component={Profile} props={props}></Route>
+                            <Route path="/user/:id" exact component={Profile} props={props}></Route>
                             <Route path="/saved" component={SavedPost}></Route>
+                            <Route path="/user/:id/posts/:postID" component={PostDetail}></Route>
                         </Switch>
                     {/* </Router> */}
                     </Content>
